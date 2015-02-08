@@ -602,7 +602,8 @@ class TreeBehavior extends Behavior
 
         $node->dirty($left, false);
         $node->dirty($right, false);
-        return $node;
+
+        return $this->_table->get($node->id);
     }
 
     /**
@@ -683,7 +684,8 @@ class TreeBehavior extends Behavior
 
         $node->dirty($left, false);
         $node->dirty($right, false);
-        return $node;
+
+        return $this->_table->get($node->id);
     }
 
     /**
