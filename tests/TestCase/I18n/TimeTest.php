@@ -358,6 +358,20 @@ class TimeTest extends TestCase
     }
 
     /**
+     * The current date should never change the response from i18nFormat
+     *
+     * @return void
+     */
+    public function testLeapYearProblems()
+    {
+        $time = new Time('2014-12-30');
+        $time->setTestNow(new Time('2015-03-01T11:03:35+0000'));
+
+        $result = $time->i18nFormat('YYYY-MM-dd');
+        $this->assertEquals('2014-12-30', $result, 'Should be identical to the Time object\'s date');
+    }
+
+    /**
      * testNice method
      *
      * @return void
