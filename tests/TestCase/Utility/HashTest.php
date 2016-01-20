@@ -15,6 +15,7 @@
 namespace Cake\Test\TestCase\Utility;
 
 use ArrayObject;
+use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
@@ -1417,6 +1418,34 @@ class HashTest extends TestCase
 
         $data['Level1']['Level2'] = ['test1', 'test2'];
         $this->assertEquals($expected, Hash::extract($data, 'Level1.Level2bis'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testExtractObjectHandling()
+    {
+        $data = [
+            'User' => [
+                'username' => 'Foo',
+                'created' => new Time()
+            ]
+        ];
+
+        $expected = [$data['User']['username']];
+        $result = Hash::extract($data, 'User.username');
+        $this->assertSame($expected, $result);
+
+        // We are looking for the created content, thus directly returning the object itself
+        $expected = $data['User']['created'];
+        $result = Hash::extract($data, 'User.created');
+        $this->assertSame($expected, $result);
+
+        // We seem to be looking for a level deeper, thus the necessary toArray here
+        $createdAsArray = (array)$data['User']['created'];
+        $expected = $createdAsArray['date'];
+        $result = Hash::extract($data, 'User.created.date');
+        $this->assertSame($expected, $result);
     }
 
     /**
