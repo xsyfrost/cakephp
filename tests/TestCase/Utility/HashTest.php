@@ -1437,13 +1437,13 @@ class HashTest extends TestCase
         $this->assertSame($expected, $result);
 
         // We are looking for the created content, thus directly returning the object itself
-        $expected = $data['User']['created'];
+        $expected = [$data['User']['created']];
         $result = Hash::extract($data, 'User.created');
         $this->assertSame($expected, $result);
 
         // We seem to be looking for a level deeper, thus the necessary toArray here
         $createdAsArray = (array)$data['User']['created'];
-        $expected = $createdAsArray['date'];
+        $expected = [$createdAsArray['date']];
         $result = Hash::extract($data, 'User.created.date');
         $this->assertSame($expected, $result);
     }
