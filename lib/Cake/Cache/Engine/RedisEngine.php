@@ -19,6 +19,8 @@
 /**
  * Redis storage engine for cache.
  *
+ * Requires at least phpredis 2.2.3
+ *
  * @package       Cake.Cache.Engine
  */
 class RedisEngine extends CacheEngine {
