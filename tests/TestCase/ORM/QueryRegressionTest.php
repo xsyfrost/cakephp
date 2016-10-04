@@ -615,6 +615,37 @@ class QueryRegressionTest extends TestCase
     }
 
     /**
+     * Test getting counts from queries with matching
+     *
+     * @return void
+     */
+    public function testCountWithMatchingConditions()
+    {
+        $this->loadFixtures('Authors', 'Articles', 'Tags', 'SpecialTags');
+        $table = TableRegistry::get('Articles');
+        $table->belongsTo('Authors', [
+            'conditions' => [
+                'Authors.id' => 1,
+            ]
+        ]);
+        $table->belongsToMany('Tags', [
+            'conditions' => [
+                'SpecialTags.extra_info' => 'Foo',
+            ],
+            'through' => 'SpecialTags'
+        ]);
+
+        $result = $table->find('all')
+            ->matching('Tags', function ($q) {
+                return $q->where(['Tags.id IN' => [1, 2, 3]]);
+            })
+            ->matching('Authors')
+            ->group(['Authors.id'])
+            ->count();
+        $this->assertSame(1, $result);
+    }
+
+    /**
      * Tests that getting the count of a query with bind is correct
      *
      * @see https://github.com/cakephp/cakephp/issues/8466
